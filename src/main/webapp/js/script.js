@@ -45,20 +45,20 @@ $(function(){
 		, setFullHeight: function() {
 			//NOTE: Sorry for this :(
 			var windowHeight = SN.global.$window.height()
-				, quoteHeight = SN.quoteElems.$quote.outerHeight() + 60
+				, quoteHeight = SN.quoteElems.$quote.outerHeight() + 60 // top padding
 				, stillWantHeight = SN.quoteElems.$stillWant.outerHeight()
 				, sectionHelloHeight = quoteHeight + stillWantHeight
 				, firstScreenHeight = (sectionHelloHeight < windowHeight) ? windowHeight : sectionHelloHeight
 
 				, sectionFormHeight = SN.formElems.$sectionForm.outerHeight()
-				, hrHeight = SN.global.$hr.outerHeight()
+				, hrHeight = 38 // margins + borders
 				, footerHeight = SN.global.$footer.outerHeight()
-				, secondScreenHeight = sectionFormHeight + hrHeight + footerHeight;
+				, secondScreenHeight = (sectionFormHeight < windowHeight) ? windowHeight - (hrHeight + footerHeight) : sectionFormHeight;
 
 			SN.quoteElems.$sectionHello.css('height', Math.max(firstScreenHeight, 1));
 			SN.quoteElems.$stillWant.css('margin-top', Math.max((firstScreenHeight - quoteHeight)/2 - stillWantHeight/2, 0));
 
-			SN.global.$footer.css('padding-bottom', Math.max(windowHeight - 60 - secondScreenHeight, 0));
+			SN.formElems.$sectionForm.css('height', Math.max(secondScreenHeight, 1));
 		}
 
 		, getNewQuote: function() {
@@ -83,7 +83,7 @@ $(function(){
 						log('errorThrown: '+ errorThrown);
 
 						startInterval();
-					  }
+					}
 				});
 			}
 
@@ -109,7 +109,7 @@ $(function(){
 			SN.quoteElems.$stillWantLink.on('click', function(e) {
 				e.preventDefault();
 
-				SN.global.$window.scrollTo(SN.formElems.$sectionForm, 1200);
+				SN.global.$window.scrollTo(SN.formElems.$sectionForm, 1200, {onAfter: function() {}});
 			});
 		}
 
@@ -169,7 +169,6 @@ $(function(){
 
 		, bindAddSendToInput: function() {
 			var inputTemplate = SN.getInputTemplate('send-to')
-
 				, newInputTemplate = '';
 
 			SN.formElems.$addSendToBtn.on('click', function() {
@@ -179,8 +178,8 @@ $(function(){
 				newInputTemplate = inputTemplate.replace(new RegExp('%i%', 'g'), SN.global.sendToItems);
 
 				$(this)
-						.parents('.controls')
-						.append(newInputTemplate);
+					.parents('.controls')
+					.append(newInputTemplate);
 
 				SN.global.sendToItems++;
 			});
@@ -190,8 +189,8 @@ $(function(){
 			SN.formElems.$removeBtn.live('click', function() {
 
 				$(this)
-						.parents('.input-append')
-						.remove();
+					.parents('.input-append')
+					.remove();
 
 				var inputType = $(this).data('input-type');
 
@@ -225,7 +224,7 @@ $(function(){
 						minlength: 4
 						, letterswithbasicpunc: true
 						, required: function() {
-							return $('select[name="to"]').val() == 'type-name';
+							return $('select[name="to"]').val() === 'type-name';
 						}
 					  }
 
@@ -241,8 +240,8 @@ $(function(){
 					  }
 
 					, 'when': {
-						required: true,
-						date: true
+						required: true
+						, date: true
 					  }
 				  }
 
@@ -287,8 +286,6 @@ $(function(){
 				  }
 
 				, submitHandler: function(form) {
-					SN.clearForm($(form).find(':input'));
-
 					$.ajax({
 						url: SN.global.formSubmitUrl()
 						, data: $(form).serialize()
@@ -296,8 +293,11 @@ $(function(){
 							SN.global.$successModal.modal('show');
 
 							SN.global.$successModal.on('hidden', function() {
-								SN.global.$window.scrollTo($('body'), 1200);
+								SN.global.$window.scrollTo($('body'), 1200, {onAfter: function() {}});
 							});
+
+							SN.clearForm($(form).find(':input'));
+
 						  }
 						, error: function(jqXHR, textStatus, errorThrown){
 							log('Text status: '+ textStatus);
