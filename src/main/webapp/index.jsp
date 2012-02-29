@@ -82,7 +82,7 @@
 
 						<div class="controls">
 							<div class="input-append">
-								<textarea id="i-want-to-say" class="span3" name="i-want-to-say" rows="3" ></textarea>
+								<textarea id="i-want-to-say" class="span3" name="i-want-to-say" rows="6" ></textarea>
 								<span class="add-on"><i class="icon-pencil"></i></span>
 							</div>
 						</div>
@@ -125,7 +125,7 @@
 
 	<div class="modal hide fade" id="successModal">
 		<div class="modal-header">
-			<a class="close" data-dismiss="modal">Г—</a>
+			<a class="close" data-dismiss="modal">×</a>
 			<h3>Be sure your note will be delivered as you asked...</h3>
 		</div>
 		<!--
@@ -162,6 +162,5 @@
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		})();
 	</script>
-
 </body>
 </html>
