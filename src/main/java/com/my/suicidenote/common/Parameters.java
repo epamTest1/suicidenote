@@ -7,6 +7,8 @@ package com.my.suicidenote.common;
 /**
  *
  * @author Andrii_Manuiev
+ * 
+ * parameters fro request
  */
 public class Parameters {
 

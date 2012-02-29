@@ -1,16 +1,13 @@
 package com.my.suicidenote.mail;
 
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.my.suicidenote.common.Parameters;
-import com.my.suicidenote.db.MongoDB;
+import com.mongodb.BasicDBObject;
+import com.my.suicidenote.db.NoteHelper;
+import com.my.suicidenote.db.object.Note;
 import it.sauronsoftware.cron4j.Scheduler;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,58 +18,39 @@ import java.util.logging.Logger;
  */
 public class Postman {
 
-    private static final String collection = "notes";
     private Scheduler s = new Scheduler();
-    
-    private List<Letter> prepareData() {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm");
-        
-        DBCollection notes = MongoDB.findCollection(collection);
-                
-        List<Letter> msgList = new ArrayList<Letter>();
-        
-        if (notes != null) {
-            DBCursor cur = notes.find();
+    private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+    private static final String CRON_EXPRESSION = "*/5 * * * *";
             
-            while (cur.hasNext()) {
-                try {
-                    DBObject advObj = cur.next();
-                    DBObject detailObj = (DBObject) advObj.get(Parameters.DETAIL);
-                    Letter letter = new Letter();
-                    
-                    letter.setTo(detailObj.get(Parameters.TO).toString());
-                    letter.setWhen(detailObj.get(Parameters.WHEN).toString());
-                    letter.setSendTo(detailObj.get(Parameters.SEND_TO).toString()); 
-                    letter.setFrom(detailObj.get(Parameters.FROM).toString());
-                    letter.setBody(detailObj.get(Parameters.SAY).toString());
-                        
-                    Calendar senderTime = Calendar.getInstance();
-                    senderTime.setTime(sdf.parse(letter.getWhen()));
-                    
-                    if (Calendar.getInstance().compareTo(senderTime) >= 0) {
-                        msgList.add(letter);
-                        //udate object
-                        detailObj.put(Parameters.SENT, true);
-                        DBObject updObj = advObj;
-                        updObj.put(Parameters.SENT, detailObj);
-                        notes.update(advObj, updObj);
-                    }
-                } catch (ParseException ex) {
-                    Logger.getLogger(Postman.class.getName()).log(Level.SEVERE, null, ex);
+    private List<Note> prepareData() {
+        
+        BasicDBObject searchQuery = new BasicDBObject();
+        searchQuery.put("sent", false);
+        
+        List<Note> result = new ArrayList<Note>(); 
+        List<Note> notes = NoteHelper.getNotes(searchQuery);
+        Calendar senderTime = Calendar.getInstance();
+        
+        try {
+            for(Note note : notes) {
+                senderTime.setTime(sdf.parse(note.getWhen()));
+                if (Calendar.getInstance().compareTo(senderTime) >= 0) {
+                    result.add(note);
                 }
             }
-            cur.close();
+        } catch (ParseException ex) {
+            Logger.getLogger(Postman.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return msgList;
+        return result;
     }
             
     public void init() {
-        s.schedule("* * * * *", new Runnable() {
-        //s.schedule("*/5 * * * *", new Runnable() {
+        s.schedule(CRON_EXPRESSION, new Runnable() {
+            @Override
             public void run() {
-                List<Letter> list = prepareData();
-                for (Letter letter : list) {
-                    new SendMail(letter).send();
+                List<Note> notes = prepareData();
+                for (Note note : notes) {
+                    SendMail.send(note);
                 }
             }
         });
