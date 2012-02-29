@@ -1,0 +1,103 @@
+@import "bootstrap/bootstrap.less";
+
+::-moz-selection {
+	background: #0088CC;
+	color: #fff;
+	text-shadow: none;
+}
+::selection{
+	background: #0088CC;
+	color: #fff;
+	text-shadow: none;
+}
+
+html{
+	overflow: hidden;
+}
+
+body{
+	padding-top: 60px;
+}
+
+@import "bootstrap/responsive.less";
+
+
+.section_hello{
+	text-align: center;
+
+	.quote{
+		padding: 60px;
+		border: 0;
+  		border-radius: 6px;
+		margin: 0;
+		background-color: #F5F5F5;
+		box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+
+		.quote-text{
+			line-height: @baseLineHeight * 3;
+			font-weight: 300;
+			font-size: @baseFontSize * 3;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+	}
+	.quote:before {
+		color: #999999;
+		content: "“";
+		display: block;
+		font-family: Cochin,Georgia,"Times New Roman",serif;
+		font-style: italic;
+		line-height: 1;
+		font-size: @baseFontSize * 8;
+		text-align: left;
+		height: 0;
+		margin-left: -0.5em;
+	}
+
+	.still-want{
+
+		.still-want-link{
+			font-size: @baseFontSize * 4;
+			line-height: @baseLineHeight * 4;
+
+			border-bottom: 4px dotted;
+			cursor: pointer;
+			outline: 0;
+
+			&:hover{
+				text-decoration: none;
+			}
+			&:active{
+				position: relative;
+				top: 3px;
+			}
+		}
+	}
+}
+
+.section_form{
+	select{
+		float: left;
+	}
+
+	textarea{
+		float: left;
+		resize: vertical;
+	}
+
+	.icon-plus,
+	.icon-minus{
+		cursor: pointer;
+	}
+
+	.form-actions{ //bootstrap reset
+ 		border: 0;
+ 		background-color: white;
+ 	}
+}
+
+
+footer{
+	padding-bottom: 60px;
+	text-align: right;
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <display-name>Suicide Notes</display-name>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    <servlet>
+        <servlet-name>advice</servlet-name>
+        <servlet-class>com.my.suicidenote.servlets.AdviceServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>NoteServlet</servlet-name>
+        <servlet-class>com.my.suicidenote.servlets.NoteServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MailSchedular</servlet-name>
+        <display-name>This schedular send a mail</display-name>
+        <servlet-class>com.my.suicidenote.servlets.MailSchedular</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>advice</servlet-name>
+        <url-pattern>/advice/index.json</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NoteServlet</servlet-name>
+        <url-pattern>/note</url-pattern>
+    </servlet-mapping>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.html</location>
+    </error-page>
+</web-app>
