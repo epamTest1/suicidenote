@@ -13,20 +13,44 @@
 
     <properties>
         <webXmlPath>src/main/webapp/WEB-INF/web.xml</webXmlPath>
+        <jelastic.username>notking@mailinator.com</jelastic.username>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-	<repositories>
-		<repository>
-			<id>repo-maven2</id>
-			<name>Maven Central Repository</name>
-			<url>http://repo2.maven.org/maven2</url>
-		</repository>
-		<repository>
-			<id>gridgainsystems-maven2-test</id>
-			<name>Gridgainsystems Maven Repository</name>
-			<url>http://www.gridgainsystems.com/maven2</url>
-		</repository>
-	</repositories>
+    <repositories>
+        <repository>
+            <id>repo-maven2</id>
+            <name>Maven Central Repository</name>
+            <url>http://repo2.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>gridgainsystems-maven2</id>
+            <name>Gridgainsystems Maven Repository</name>
+            <url>http://www.gridgainsystems.com/maven2</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>jelastic-central</id>
+            <name>plugins-release</name>
+            <url>http://repo.jelastic.com:8081/plugins-release-local</url>
+        </pluginRepository>
+        <pluginRepository>
+            <snapshots />
+            <id>jelastic-snapshots</id>
+            <name>plugins-snapshot</name>
+            <url>http://repo.jelastic.com:8081/plugins-snapshot-local</url>
+        </pluginRepository>
+		
+        <pluginRepository>
+            <snapshots />
+            <id>jelastic-dependencies</id>
+            <name>plugins-dependencies</name>
+            <url>http://repo.jelastic.com:8081/plugins-snapshot/</url>
+        </pluginRepository>
+    </pluginRepositories>
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -44,7 +68,7 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>2.7.3</version>
-		</dependency>
+        </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
@@ -75,15 +99,18 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.4.3</version>
+                <groupId>com.jelastic</groupId>
+                <artifactId>jelastic-maven-plugin</artifactId>
+                <version>1.6</version>
                 <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <email>${jelastic.username}</email>
+                    <password>${jelastic.password}</password>
+                    <context>ROOT</context>
+                    <environment>suicidenote</environment>
+                    <api_hoster>app.jelastic.servint.net</api_hoster>
                 </configuration>
             </plugin>
         </plugins>
