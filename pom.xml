@@ -21,7 +21,7 @@
 			<url>http://repo2.maven.org/maven2</url>
 		</repository>
 		<repository>
-			<id>gridgainsystems-maven2</id>
+			<id>gridgainsystems-maven2-test</id>
 			<name>Gridgainsystems Maven Repository</name>
 			<url>http://www.gridgainsystems.com/maven2</url>
 		</repository>
