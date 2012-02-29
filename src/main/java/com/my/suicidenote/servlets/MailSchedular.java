@@ -21,7 +21,7 @@ public class MailSchedular extends HttpServlet {
     Postman postman = new Postman();
     @Override
     public void init(ServletConfig config) throws ServletException {
-        System.out.println("Mail start");
+        System.out.println("MailSchedular start");
         super.init(config);
         postman.init();
         postman.start();
@@ -38,7 +38,7 @@ public class MailSchedular extends HttpServlet {
     
     @Override
     public void destroy() {
-        System.out.println("Mail stop");
+        System.out.println("MailSchedular stop");
         postman.stop();
     }
 }

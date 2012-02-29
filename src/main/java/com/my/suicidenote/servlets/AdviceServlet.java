@@ -4,14 +4,10 @@
  */
 package com.my.suicidenote.servlets;
 
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.my.suicidenote.db.MongoDB;
+import com.my.suicidenote.db.AdviceHelper;
+import com.my.suicidenote.db.object.Advice;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,37 +19,26 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class AdviceServlet extends HttpServlet {
 
-    private static final String collection = "advices";
-
-    List<String> adviceList = new ArrayList<String>();
-            
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        DBCollection advices = MongoDB.findCollection(collection);
-        if (advices != null) {
-            DBCursor cur = advices.find();
-            while (cur.hasNext()) {
-                DBObject advObj = cur.next();
-                adviceList.add(advObj.get("text").toString());
-            }
-            cur.close();
-        }
-    }
-
+    static final String ADVICE_BY_DEFAULT = "It is your responsibility to make your dreams come true";
+    
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        String result = "It is your responsibility to make your dreams come true";
-
+        
+        String result = null;
+        
+        List<Advice> adviceList = AdviceHelper.getAdvices();
+        
         if (!adviceList.isEmpty()) {
             int idx = (int) (Math.random() * (adviceList.size()));
-            result = adviceList.get(idx);
+            result = adviceList.get(idx).getText();
         }
 
         response.setContentType("application/json");
 
-        if (request.getParameter("text") != null) {
+        result = (result == null) ? ADVICE_BY_DEFAULT : result;
+        
+        // show as text instead JSON
+        if (request.getParameter("astext") != null) {
             response.getWriter().print(result);
         } else {
             response.getWriter().print(String.format("{ \"advice\": \"%s\"  } ", result));

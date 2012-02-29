@@ -11,20 +11,19 @@ import java.util.logging.Logger;
  * @author Andrii_Manuiev
  */
 public class MongoDB {
-
-    //TODO : change connection string
-    static final String host = "mongodb-suicidenote.jelastic.servint.net";
-    //static final String host = "localhost";
-    public static final String dbname = "suicidedb";
-    static final String user = "webUser";
-    static final String passwd = "xrokolo6574ss";
+    static final String HOST_NAME = "localhost";
+    //static final String HOST_NAME = "mongodb-suicidenote.jelastic.servint.net";
+    public static final String DB_NAME = "suicidedb";
+    static final String USER_NAME = "webUser";
+    static final String USER_PASSWORD = "xrokolo6574ss";
+    
     private static DB db;
 
     public static synchronized DB getDB() {
         if (db == null) {
             try {
-                db = new Mongo(host).getDB(dbname);
-                if (db.authenticate(user, passwd.toCharArray())) {
+                db = new Mongo(HOST_NAME).getDB(DB_NAME);
+                if (db.authenticate(USER_NAME, USER_PASSWORD.toCharArray())) {
                     System.out.println("Connection and authenticate is OK");
                 } else {
                     System.out.println("Authenticate is failed");

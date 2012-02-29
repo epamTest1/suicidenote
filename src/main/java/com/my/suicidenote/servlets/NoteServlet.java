@@ -4,13 +4,10 @@
  */
 package com.my.suicidenote.servlets;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.my.suicidenote.common.Parameters;
-import com.my.suicidenote.db.MongoDB;
+import com.my.suicidenote.db.NoteHelper;
+import com.my.suicidenote.db.object.Note;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +19,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class NoteServlet extends HttpServlet {
 
-    private static final String NOTES_COLLECTION_NAME = "notes";
-
     /**
      * Handles the HTTP
      * <code>POST</code> method.
@@ -34,21 +29,14 @@ public class NoteServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        DBCollection collection = MongoDB.findCollection(NOTES_COLLECTION_NAME);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        Note note = new Note();
         
-        BasicDBObject document = new BasicDBObject();
-	document.put("database", MongoDB.dbname);
-	document.put("table", NOTES_COLLECTION_NAME);
-        
-        Map<String, Object> documentDetail = new HashMap<String, Object>();
-        documentDetail.put(Parameters.TO, request.getParameter(Parameters.TO));
-        documentDetail.put(Parameters.SAY, request.getParameter(Parameters.SAY));
-        documentDetail.put(Parameters.WHEN, request.getParameter(Parameters.WHEN));
-        documentDetail.put(Parameters.FROM, request.getParameter(Parameters.FROM));
-        documentDetail.put(Parameters.SENT, false);
-        
+        note.setFrom(request.getParameter(Parameters.FROM));
+        note.setSay(request.getParameter(Parameters.SAY));
+        note.setSent(false);
+        // its can be a couple of sender
         StringBuilder sendTo = new StringBuilder();
         sendTo.append(request.getParameter(Parameters.SEND_TO)).append(",");
         int i = 0;
@@ -56,11 +44,12 @@ public class NoteServlet extends HttpServlet {
             sendTo.append(request.getParameter(Parameters.SEND_TO + "-" + i)).append(",");
             i++;
         }
-        documentDetail.put(Parameters.SEND_TO, sendTo.toString());
+        note.setSentTo(sendTo.toString());
         
-        document.put(Parameters.DETAIL, documentDetail);
-                
-        collection.insert(new BasicDBObject(document));
+        note.setTo(request.getParameter(Parameters.TO));
+        note.setWhen(request.getParameter(Parameters.WHEN));
+        
+        NoteHelper.incertNote(note);
     }
 
     /**
@@ -70,12 +59,11 @@ public class NoteServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Servelt insert user note in db";
     }// </editor-fold>
     
     @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
-        }
+    }
 }

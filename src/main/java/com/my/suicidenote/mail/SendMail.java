@@ -1,9 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.my.suicidenote.mail;
 
+import com.mongodb.BasicDBObject;
+import com.my.suicidenote.db.NoteHelper;
+import com.my.suicidenote.db.object.Note;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +10,7 @@ import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -25,19 +25,7 @@ public class SendMail {
     static final String FROM = "suicide@dead.com";
     static final String SUBJECT = "%s has sent you a suicide note";
     
-    private String sendTo;
-    private String to;
-    private String from;
-    private String text;
-
-    public SendMail(Letter letter) {
-        this.to = letter.getTo();
-        this.sendTo = letter.getSendTo();
-        this.text = letter.getBody();
-        this.from = letter.getFrom();
-    }
-
-    public void send() {
+    public static void send(Note note) {
 
         Properties props = new Properties();
         props.put("mail.smtp.host", SMTP_NAME);
@@ -58,8 +46,7 @@ public class SendMail {
         InternetAddress[] toAddress = null;
         try {
             fromAddress = new InternetAddress(FROM);
-            toAddress = InternetAddress.parse(sendTo);
-
+            toAddress = InternetAddress.parse(note.getSentTo());
         } catch (AddressException e) {
             Logger.getLogger(Postman.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -69,11 +56,14 @@ public class SendMail {
             for (InternetAddress rec : toAddress) {
                 simpleMessage.setRecipient(Message.RecipientType.TO, rec);
             }
-            simpleMessage.setSubject(String.format(SUBJECT, from));
-                    
-            simpleMessage.setText(text);
+            simpleMessage.setSubject(String.format(SUBJECT, note.getFrom()));
+            //TODO : develop and apply some template 
+            simpleMessage.setText(note.getSay());
 
             Transport.send(simpleMessage);
+            // mark note as alredy send
+            NoteHelper.updateNote(new BasicDBObject().append("_id", new ObjectId(note.getId())), 
+                    new BasicDBObject().append("$set", new BasicDBObject().append("sent", true)));
         } catch (MessagingException e) {
             Logger.getLogger(Postman.class.getName()).log(Level.SEVERE, null, e);
         }
