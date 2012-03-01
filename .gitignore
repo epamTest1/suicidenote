@@ -1,2 +1,5 @@
-
 /nb-configuration.xml
+/.settings
+/target
+.project
+.gitignore

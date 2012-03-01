@@ -83,7 +83,7 @@
 
 						<div class="controls">
 							<div class="input-append">
-								<textarea id="i-want-to-say" class="span3" name="i-want-to-say" rows="3" ></textarea>
+								<textarea id="i-want-to-say" class="span3" name="i-want-to-say" rows="6" ></textarea>
 								<span class="add-on"><i class="icon-pencil"></i></span>
 							</div>
 						</div>
@@ -163,6 +163,5 @@
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		})();
 	</script>
-
 </body>
 </html>
