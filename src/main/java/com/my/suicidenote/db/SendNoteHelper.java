@@ -12,27 +12,27 @@ import java.util.List;
  *
  * @author Andrii_Manuiev
  */
-public class NoteHelper {
+public class SendNoteHelper {
     
-    private static final String NOTES_COLLECTION_NAME = "notes";
-    private static DBCollection notesCollections;
+    private static final String NOTES_COLLECTION_NAME = "send_notes";
+    private static DBCollection sendNotesCollections;
 
     public static void init() {
-        if (notesCollections == null) {
-            notesCollections = MongoDB.findCollection(NOTES_COLLECTION_NAME);
+        if (sendNotesCollections == null) {
+            sendNotesCollections = MongoDB.findCollection(NOTES_COLLECTION_NAME);
         }
     }
     
     public static void incertNote(Note note) {
         init();
-        notesCollections.insert(note.toDbObject());
+        sendNotesCollections.insert(note.toDbObject());
     }
 
     public static List<Note> getNotes() {
         init();
         List<Note> notes = new ArrayList<Note>();
 
-        DBCursor cursor = notesCollections.find();
+        DBCursor cursor = sendNotesCollections.find();
         while (cursor.hasNext()) {
             DBObject dbo = cursor.next();
             Note note = Note.fromDBObject(dbo);
@@ -46,26 +46,12 @@ public class NoteHelper {
         init();
         List<Note> notes = new ArrayList<Note>();
 
-        DBCursor cursor = notesCollections.find(searchQuery);
+        DBCursor cursor = sendNotesCollections.find(searchQuery);
         while (cursor.hasNext()) {
             DBObject dbo = cursor.next();
             Note note = Note.fromDBObject(dbo);
             notes.add(note);
         }
         return notes;
-    }
-    
-    public static void updateNote(BasicDBObject filter, BasicDBObject newDocument) {
-        init();
-        notesCollections.update(filter, newDocument);
-    }
-    
-    public static void removeNote(BasicDBObject document) {
-        init();
-        notesCollections.findAndRemove(document);
-    }
-    public static void removeNote(Note note) {
-        init();
-        notesCollections.findAndRemove(note.toDbObject());
     }
 }

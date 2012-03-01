@@ -2,6 +2,7 @@ package com.my.suicidenote.mail;
 
 import com.mongodb.BasicDBObject;
 import com.my.suicidenote.db.NoteHelper;
+import com.my.suicidenote.db.SendNoteHelper;
 import com.my.suicidenote.db.object.Note;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -61,9 +62,9 @@ public class SendMail {
             simpleMessage.setText(note.getSay());
 
             Transport.send(simpleMessage);
-            // mark note as alredy send
-            NoteHelper.updateNote(new BasicDBObject().append("_id", new ObjectId(note.getId())), 
-                    new BasicDBObject().append("$set", new BasicDBObject().append("sent", true)));
+            //move note to already sent collection
+            NoteHelper.removeNote(note);
+            SendNoteHelper.incertNote(note);
         } catch (MessagingException e) {
             Logger.getLogger(Postman.class.getName()).log(Level.SEVERE, null, e);
         }
