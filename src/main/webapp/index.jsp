@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <!doctype html>
 <!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"><![endif]-->
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
@@ -125,7 +126,7 @@
 
 	<div class="modal hide fade" id="successModal">
 		<div class="modal-header">
-			<a class="close" data-dismiss="modal">Г—</a>
+			<a class="close" data-dismiss="modal">×</a>
 			<h3>Be sure your note will be delivered as you asked...</h3>
 		</div>
 		<!--
