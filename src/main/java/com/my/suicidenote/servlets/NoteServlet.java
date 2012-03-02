@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.my.suicidenote.servlets;
 
 import com.my.suicidenote.common.Parameters;
@@ -10,7 +6,8 @@ import com.my.suicidenote.db.object.Note;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -25,6 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 public class NoteServlet extends HttpServlet {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+    
+    private String stripHTMLTag(String parameter) {
+        return parameter != null ? parameter.replaceAll("\\<\\/?([^\\>]*)\\>", "") : "";
+    }
     /**
      * Handles the HTTP
      * <code>POST</code> method.
@@ -38,27 +39,34 @@ public class NoteServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Note note = new Note();
-        
-        note.setFrom(request.getParameter(Parameters.FROM));
-        note.setSay(request.getParameter(Parameters.SAY));
+
+        note.setFrom(stripHTMLTag(request.getParameter(Parameters.FROM)));
+        note.setSay(stripHTMLTag(request.getParameter(Parameters.SAY)));
         // recipient can be more then one
         StringBuilder sendTo = new StringBuilder();
-        sendTo.append(request.getParameter(Parameters.SEND_TO)).append(",");
+        sendTo.append(stripHTMLTag(request.getParameter(Parameters.SEND_TO))).append(",");
         int i = 0;
         while (request.getParameter(Parameters.SEND_TO + "-" + i) != null) {
-            sendTo.append(request.getParameter(Parameters.SEND_TO + "-" + i)).append(",");
+            sendTo.append(stripHTMLTag(request.getParameter(Parameters.SEND_TO + "-" + i))).append(",");
             i++;
         }
         note.setSentTo(sendTo.toString());
-        note.setTo(request.getParameter(Parameters.TO));
+        note.setTo(stripHTMLTag(request.getParameter(Parameters.TO)));
         
-        long datetime = new Date().getTime();
+        String timeZone = stripHTMLTag(request.getParameter(Parameters.TIME_ZONE));
+        timeZone = timeZone.startsWith("-") ? "GMT".concat(timeZone) : "GMT+".concat(timeZone);
+        note.setTimeZone(timeZone);
+        
+        Calendar currentUserDate = Calendar.getInstance(TimeZone.getTimeZone(note.getTimeZone()));
         try {
-            datetime = sdf.parse(request.getParameter(Parameters.WHEN)).getTime();
+            currentUserDate.setTime(sdf.parse(stripHTMLTag(request.getParameter(Parameters.WHEN))));
         } catch (ParseException ex) {
             Logger.getLogger(NoteServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        note.setWhen(datetime);
+        Calendar currentHostDate = Calendar.getInstance();
+        currentHostDate.setTimeInMillis(currentUserDate.getTimeInMillis());
+                
+        note.setWhen(currentUserDate.getTimeInMillis());
         
         NoteHelper.incertNote(note);
     }

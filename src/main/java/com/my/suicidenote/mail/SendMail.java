@@ -1,6 +1,5 @@
 package com.my.suicidenote.mail;
 
-import com.mongodb.BasicDBObject;
 import com.my.suicidenote.db.NoteHelper;
 import com.my.suicidenote.db.SendNoteHelper;
 import com.my.suicidenote.db.object.Note;
@@ -11,7 +10,6 @@ import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import org.bson.types.ObjectId;
 
 /**
  *

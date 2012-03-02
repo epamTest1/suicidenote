@@ -19,7 +19,7 @@ public class Postman {
     private List<Note> prepareData() {
         Calendar currentDate = Calendar.getInstance();
         BasicDBObject searchQuery = new BasicDBObject();
-        searchQuery.append("when", new BasicDBObject("$lte", currentDate.getTimeInMillis()));
+        searchQuery.append(Note.DB_FIELD_NAME.when.name(), new BasicDBObject("$lte", currentDate.getTimeInMillis()));
         return NoteHelper.getNotes(searchQuery);
     }
             

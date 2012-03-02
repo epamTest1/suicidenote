@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.my.suicidenote.servlets;
 
 import com.my.suicidenote.db.AdviceHelper;
@@ -20,7 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 public class AdviceServlet extends HttpServlet {
 
     static final String ADVICE_BY_DEFAULT = "It is your responsibility to make your dreams come true";
-    
+    static final String RETURN_AS_TEXT = "astext";
+            
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
@@ -37,8 +34,7 @@ public class AdviceServlet extends HttpServlet {
 
         result = (result == null) ? ADVICE_BY_DEFAULT : result;
         
-        // show as text instead JSON
-        if (request.getParameter("astext") != null) {
+        if (request.getParameter(RETURN_AS_TEXT) != null) {
             response.getWriter().print(result);
         } else {
             response.getWriter().print(String.format("{ \"advice\": \"%s\"  } ", result));

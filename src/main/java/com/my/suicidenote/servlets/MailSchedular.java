@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.my.suicidenote.servlets;
 
 import com.my.suicidenote.mail.Postman;
@@ -21,7 +17,7 @@ public class MailSchedular extends HttpServlet {
     Postman postman = new Postman();
     @Override
     public void init(ServletConfig config) throws ServletException {
-        System.out.println("MailSchedular start");
+        System.out.println("Mail Schedular start");
         super.init(config);
         postman.init();
         postman.start();
@@ -38,7 +34,7 @@ public class MailSchedular extends HttpServlet {
     
     @Override
     public void destroy() {
-        System.out.println("MailSchedular stop");
+        System.out.println("Mail Schedular stop");
         postman.stop();
     }
 }

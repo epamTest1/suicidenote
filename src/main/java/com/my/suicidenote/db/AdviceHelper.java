@@ -14,16 +14,9 @@ import java.util.List;
 public class AdviceHelper {
 
     private static final String ADVICE_COLLECTION_NAME = "advices";
-    private static DBCollection advicesCollections;
-    
-    public static void init() {
-        if (advicesCollections == null) {
-            advicesCollections = MongoDB.findCollection(ADVICE_COLLECTION_NAME);
-        }
-    }
+    private static DBCollection advicesCollections = MongoDB.findCollection(ADVICE_COLLECTION_NAME);;
     
     public static List<Advice> getAdvices() {
-        init();
         List<Advice> advices = new ArrayList<Advice>();
 
         DBCursor cursor = advicesCollections.find();

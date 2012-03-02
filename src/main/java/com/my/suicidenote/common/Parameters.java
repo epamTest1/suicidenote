@@ -23,8 +23,6 @@ public class Parameters {
     public static final String SEND_TO = "send-to";
     //time when letter should be send
     public static final String WHEN = "when";
-    //is send already
-    public static final String SENT = "sent";
-    
-    public static final String DETAIL = "detail";
+    // user timezone
+    public static final String TIME_ZONE = "time-zone";
 }

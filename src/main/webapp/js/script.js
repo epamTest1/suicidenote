@@ -315,7 +315,7 @@ $(function(){
 
 		, getTimeZone: function() {
 			var currentDate = new Date()
-				, currentTimeZoneOffsetInHours = currentDate.getTimezoneOffset()/60;
+				, currentTimeZoneOffsetInHours = -currentDate.getTimezoneOffset()/60;
 
 			SN.formElems.$timeZone.val(currentTimeZoneOffsetInHours);
 		}

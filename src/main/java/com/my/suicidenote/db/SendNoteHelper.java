@@ -15,21 +15,13 @@ import java.util.List;
 public class SendNoteHelper {
     
     private static final String NOTES_COLLECTION_NAME = "send_notes";
-    private static DBCollection sendNotesCollections;
+    private static DBCollection sendNotesCollections = MongoDB.findCollection(NOTES_COLLECTION_NAME);
 
-    public static void init() {
-        if (sendNotesCollections == null) {
-            sendNotesCollections = MongoDB.findCollection(NOTES_COLLECTION_NAME);
-        }
-    }
-    
     public static void incertNote(Note note) {
-        init();
         sendNotesCollections.insert(note.toDbObject());
     }
 
     public static List<Note> getNotes() {
-        init();
         List<Note> notes = new ArrayList<Note>();
 
         DBCursor cursor = sendNotesCollections.find();
@@ -43,7 +35,6 @@ public class SendNoteHelper {
     }
 
     public static List<Note> getNotes(BasicDBObject searchQuery) {
-        init();
         List<Note> notes = new ArrayList<Note>();
 
         DBCursor cursor = sendNotesCollections.find(searchQuery);
