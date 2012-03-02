@@ -105,6 +105,7 @@
 							<div class="input-append">
 								<input id="when" class="span3" name="when" type="date" placeholder="__/__/____ __:__">
 								<span class="add-on"><i class="icon-calendar"></i></span>
+								<input id="time-zone" name="time-zone" type="hidden">
 							</div>
 						</div>
 					</div>

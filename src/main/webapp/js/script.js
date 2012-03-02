@@ -40,6 +40,7 @@ $(function(){
 			, $addSendToBtn: $('.icon-plus')
 			, $removeBtn: $('.icon-minus')
 			, $inputWhen: $('input[type="date"]')
+			, $timeZone: $('#time-zone')
 		}
 
 		, setFullHeight: function() {
@@ -308,6 +309,17 @@ $(function(){
 			});
 		}
 
+		, initDatePicker: function() {
+			SN.formElems.$inputWhen.datetimepicker();
+		}
+
+		, getTimeZone: function() {
+			var currentDate = new Date()
+				, currentTimeZoneOffsetInHours = currentDate.getTimezoneOffset()/60;
+
+			SN.formElems.$timeZone.val(currentTimeZoneOffsetInHours);
+		}
+
 		, clearForm: function(form) {
 			form.each(function() {
 				var type = this.type, tag = this.tagName.toLowerCase();
@@ -318,10 +330,6 @@ $(function(){
 					this.selectedIndex = 0;
 				}
 			});
-		}
-
-		, initDatePicker: function() {
-			SN.formElems.$inputWhen.datetimepicker();
 		}
 
 		, init: function() {
@@ -335,6 +343,7 @@ $(function(){
 			SN.bindSendMyNote();
 			SN.getNewQuote();
 			SN.initDatePicker();
+			SN.getTimeZone();
 		}
 
 	};
