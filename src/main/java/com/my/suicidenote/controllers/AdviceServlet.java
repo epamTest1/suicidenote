@@ -21,10 +21,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
  */
 @Controller
 public class AdviceServlet  {
-
-    static final String ADVICE_BY_DEFAULT = "It is your responsibility to make your dreams come true";
-    static final String RETURN_AS_TEXT = "astext";
-            
     @RequestMapping(value = "/advice.json", method = { GET, POST })    
     public @ResponseBody Advice getRandomAdviceAsJSON() throws IOException {        
         return getRandomAdvice();
@@ -36,7 +32,7 @@ public class AdviceServlet  {
     }
 
 	private Advice getRandomAdvice() {
-		Advice result = new Advice(ADVICE_BY_DEFAULT);        
+		Advice result = new Advice(Advice.DEFAULT_ADVICE_TEXT);        
         List<Advice> adviceList = AdviceHelper.getAdvices();        
         if (!adviceList.isEmpty()) {
             int idx = (int) (Math.random() * (adviceList.size()));

@@ -8,6 +8,7 @@ import com.mongodb.DBObject;
  * @author Andrii_Manuiev
  */
 public class Advice {
+    public static final String DEFAULT_ADVICE_TEXT = "It is your responsibility to make your dreams come true";
 
     public static enum DB_FIELD_NAME {
         _id(), text();
@@ -49,5 +50,9 @@ public class Advice {
         advice.text = (String) document.get(DB_FIELD_NAME.text.name());
         
         return advice;
+    }
+    
+    public String getDEFAULT_ADVICE_TEXT() {
+    	return DEFAULT_ADVICE_TEXT;
     }
 }

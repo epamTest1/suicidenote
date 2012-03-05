@@ -1,4 +1,5 @@
 <%@page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"><![endif]-->
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
@@ -38,7 +39,8 @@
 
 			<blockquote class="quote tk-acta-display" data-ajax-url="/advice.json" data-interval-value="5sec">
 				<p class="quote-text">
-<%-- 					<jsp:include page="/advice/index.json?astext=1" /> --%>
+ 					<jsp:useBean id="advice" class="com.my.suicidenote.db.object.Advice" scope="page"/>
+ 					<c:out value="${advice.DEFAULT_ADVICE_TEXT}"/>
 				</p>
 			</blockquote>
 
