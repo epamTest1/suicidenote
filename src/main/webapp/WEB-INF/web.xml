@@ -1,38 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-    <display-name>Suicide Notes</display-name>
-    <session-config>
-        <session-timeout>
-            30
-        </session-timeout>
-    </session-config>
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
+<web-app id="WebApp_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>Sample Web Application</display-name>
+	<servlet>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
     <servlet>
-        <servlet-name>advice</servlet-name>
-        <servlet-class>com.my.suicidenote.servlets.AdviceServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>NoteServlet</servlet-name>
-        <servlet-class>com.my.suicidenote.servlets.NoteServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <display-name>This schedular send a mail</display-name>
+        <display-name>This scheduler send a mail</display-name>
         <servlet-name>MailSchedular</servlet-name>
-        <servlet-class>com.my.suicidenote.servlets.MailSchedular</servlet-class>
+        <servlet-class>com.my.suicidenote.controllers.MailSchedular</servlet-class>
         <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>advice</servlet-name>
-        <url-pattern>/advice/index.json</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>NoteServlet</servlet-name>
-        <url-pattern>/note</url-pattern>
-    </servlet-mapping>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/404.html</location>
-    </error-page>
+    </servlet>	
+	<servlet-mapping>
+		<servlet-name>spring</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	<welcome-file-list>
+		<welcome-file>/index.jsp</welcome-file>
+	</welcome-file-list>
+	<error-page>
+		<exception-type>Throwable</exception-type>
+		<location>/error.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error.jsp</location>
+	</error-page>
 </web-app>

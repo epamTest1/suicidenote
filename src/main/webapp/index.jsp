@@ -36,9 +36,9 @@
 
 		<section class="section_hello" role="main">
 
-			<blockquote class="quote tk-acta-display" data-ajax-url="http://suicidenote.jelastic.servint.net/advice/index.json" data-interval-value="5sec">
+			<blockquote class="quote tk-acta-display" data-ajax-url="/advice.json" data-interval-value="5sec">
 				<p class="quote-text">
-					<jsp:include page="/advice/index.json?astext=1" />
+<%-- 					<jsp:include page="/advice/index.json?astext=1" /> --%>
 				</p>
 			</blockquote>
 

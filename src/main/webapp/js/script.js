@@ -75,7 +75,7 @@ $(function(){
 					, success: function(data){
 
 						SN.quoteElems.$quoteText.fadeOut('slow', function() {
-							$(this).html(data['advice']);
+							$(this).html(data['text']);
 							$(this).fadeIn('fast', startInterval);
 						});
 					  }

@@ -28,6 +28,13 @@ public class Advice {
         this.text = text;
     }
     
+    public Advice() {    	
+    }
+
+    public Advice(String text) {
+    	setText(text);
+    }
+    
     public BasicDBObject toDbObject() {
         BasicDBObject document = new BasicDBObject();
         

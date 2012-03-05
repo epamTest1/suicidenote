@@ -1,4 +1,4 @@
-package com.my.suicidenote.servlets;
+package com.my.suicidenote.controllers;
 
 import com.my.suicidenote.mail.Postman;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.my.suicidenote.servlets;
+package com.my.suicidenote.controllers;
 
 import com.my.suicidenote.common.Parameters;
 import com.my.suicidenote.db.NoteHelper;
@@ -15,28 +15,29 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpStatus;
+
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
 /**
  *
  * @author Oleksandr_Shcherbyna
  */
-public class NoteServlet extends HttpServlet {
+@Controller
+public class NoteServlet {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm");
     
     private String stripHTMLTag(String parameter) {
         return parameter != null ? parameter.replaceAll("\\<\\/?([^\\>]*)\\>", "") : "";
     }
-    /**
-     * Handles the HTTP
-     * <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    
+    @RequestMapping(value="/note")
+    @ResponseStatus(HttpStatus.OK)
+    public void saveNote(HttpServletRequest request) throws  IOException {
 
         Note note = new Note();
 
@@ -69,20 +70,5 @@ public class NoteServlet extends HttpServlet {
         note.setWhen(currentUserDate.getTimeInMillis());
         
         NoteHelper.incertNote(note);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Servelt insert user note in db";
-    }// </editor-fold>
-    
-    @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
     }
 }
