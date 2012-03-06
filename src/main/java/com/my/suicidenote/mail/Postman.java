@@ -34,7 +34,7 @@ public class Postman {
         return repository.findByWhenLessThan(currentDate.getTimeInMillis());
     }
             
-    public void Postman() {
+    public Postman() {
         s.schedule(CRON_EXPRESSION, new Runnable() {
             @Override
             public void run() {

@@ -12,6 +12,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,9 @@ public class Mailer {
 	@Autowired
 	NoteRepository repository;
     
+	@Autowired
+	MongoTemplate mongoTemplate;
+	
     public void send(Note note) {
 
         Properties props = new Properties();
@@ -71,6 +75,8 @@ public class Mailer {
             //move note to already sent collection
             
             repository.delete(note);
+            
+            mongoTemplate.insert(note, "sent_notes");
             //SendNoteHelper.incertNote(note);
         } catch (MessagingException e) {
             Logger.getLogger(Postman.class.getName()).log(Level.SEVERE, null, e);
