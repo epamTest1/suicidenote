@@ -1,12 +1,13 @@
 package com.my.suicidenote.mail;
 
-import com.mongodb.BasicDBObject;
 import com.my.suicidenote.dto.Note;
-import com.my.suicidenote.repo.NoteHelper;
+import com.my.suicidenote.repo.NoteRepository;
 
 import it.sauronsoftware.cron4j.Scheduler;
 import java.util.Calendar;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -14,14 +15,18 @@ import java.util.List;
  */
 public class Postman {
 
+	@Autowired
+	NoteRepository repository;
+	
+	@Autowired
+	Mailer mailer;
+	
     private Scheduler s = new Scheduler();
     private static final String CRON_EXPRESSION = "*/5 * * * *";
             
     private List<Note> prepareData() {
-        Calendar currentDate = Calendar.getInstance();
-        BasicDBObject searchQuery = new BasicDBObject();
-        searchQuery.append(Note.DB_FIELD_NAME.when.name(), new BasicDBObject("$lte", currentDate.getTimeInMillis()));
-        return NoteHelper.getNotes(searchQuery);
+        Calendar currentDate = Calendar.getInstance();              
+        return repository.findByWhenLessThan(currentDate.getTimeInMillis());
     }
             
     public void init() {
@@ -30,7 +35,7 @@ public class Postman {
             public void run() {
                 List<Note> notes = prepareData();
                 for (Note note : notes) {
-                    SendMail.send(note);
+                    mailer.send(note);
                 }
             }
         });

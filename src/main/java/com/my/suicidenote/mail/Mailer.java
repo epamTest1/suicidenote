@@ -1,8 +1,7 @@
 package com.my.suicidenote.mail;
 
 import com.my.suicidenote.dto.Note;
-import com.my.suicidenote.repo.NoteHelper;
-import com.my.suicidenote.repo.SendNoteHelper;
+import com.my.suicidenote.repo.NoteRepository;
 
 import java.util.Properties;
 import java.util.logging.Level;
@@ -12,11 +11,16 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.Repository;
+import org.springframework.stereotype.Component;
+
 /**
  *
  * @author Andrii_Manuiev
  */
-public class SendMail {
+@Component
+public class Mailer {
 
     static final String SMTP_NAME = "smtp.gmail.com";
     static final String SMTP_PORT = "465";
@@ -24,8 +28,11 @@ public class SendMail {
     static final String USER_PASS = "epamtest";
     static final String FROM = "suicide@dead.com";
     static final String SUBJECT = "%s has sent you a suicide note";
+
+	@Autowired
+	NoteRepository repository;
     
-    public static void send(Note note) {
+    public void send(Note note) {
 
         Properties props = new Properties();
         props.put("mail.smtp.host", SMTP_NAME);
@@ -62,8 +69,9 @@ public class SendMail {
 
             Transport.send(simpleMessage);
             //move note to already sent collection
-            NoteHelper.removeNote(note);
-            SendNoteHelper.incertNote(note);
+            
+            repository.delete(note);
+            //SendNoteHelper.incertNote(note);
         } catch (MessagingException e) {
             Logger.getLogger(Postman.class.getName()).log(Level.SEVERE, null, e);
         }

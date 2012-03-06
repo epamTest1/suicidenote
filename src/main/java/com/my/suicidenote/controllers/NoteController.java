@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.my.suicidenote.common.Parameters;
@@ -69,4 +71,10 @@ public class NoteController {
         note.setWhen(currentUserDate.getTimeInMillis());
         repository.save(note);
     }
+    
+//    @RequestMapping(value="/notestosend")
+//    public @ResponseBody List<Note> getNotes() {
+//        Calendar currentDate = Calendar.getInstance();              
+//        return repository.findByWhenLessThan(currentDate.getTimeInMillis());
+//    }
 }
