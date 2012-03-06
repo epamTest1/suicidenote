@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Andrii_Manuiev
  */
 public class MailSchedular extends HttpServlet {
-
+    // add a new job - clear the session which less then one day
     Postman postman = new Postman();
     @Override
     public void init(ServletConfig config) throws ServletException {

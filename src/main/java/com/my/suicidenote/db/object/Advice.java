@@ -33,7 +33,7 @@ public class Advice {
     }
 
     public Advice(String text) {
-    	setText(text);
+        setText(text);
     }
     
     public BasicDBObject toDbObject() {
