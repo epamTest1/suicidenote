@@ -8,12 +8,6 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
-    <servlet>
-        <display-name>This scheduler send a mail</display-name>
-        <servlet-name>MailSchedular</servlet-name>
-        <servlet-class>com.my.suicidenote.controllers.MailSchedular</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>	
 	<servlet-mapping>
 		<servlet-name>spring</servlet-name>
 		<url-pattern>/</url-pattern>

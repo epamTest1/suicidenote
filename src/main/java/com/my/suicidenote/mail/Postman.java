@@ -7,12 +7,17 @@ import it.sauronsoftware.cron4j.Scheduler;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Andrii_Manuiev
  */
+@Component
 public class Postman {
 
 	@Autowired
@@ -29,7 +34,7 @@ public class Postman {
         return repository.findByWhenLessThan(currentDate.getTimeInMillis());
     }
             
-    public void init() {
+    public void Postman() {
         s.schedule(CRON_EXPRESSION, new Runnable() {
             @Override
             public void run() {
@@ -41,10 +46,12 @@ public class Postman {
         });
     }
     
+    @PostConstruct
     public void start() {
         s.start();
     }
     
+    @PreDestroy
     public void stop() {
         s.stop();
     }
