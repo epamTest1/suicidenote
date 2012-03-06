@@ -1,8 +1,9 @@
 package com.my.suicidenote.mail;
 
 import com.mongodb.BasicDBObject;
-import com.my.suicidenote.db.NoteHelper;
-import com.my.suicidenote.db.object.Note;
+import com.my.suicidenote.dto.Note;
+import com.my.suicidenote.repo.NoteHelper;
+
 import it.sauronsoftware.cron4j.Scheduler;
 import java.util.Calendar;
 import java.util.List;

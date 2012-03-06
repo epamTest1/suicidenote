@@ -1,19 +1,24 @@
-package com.my.suicidenote.db.object;
+package com.my.suicidenote.dto;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import java.util.Calendar;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 /**
  *
  * @author Andrii_Manuiev
  */
+@Document(collection="notes")
 public class Note {
     
     static public enum DB_FIELD_NAME {
         _id(), to(),say(), when(), from(), sendTo(), timeZone();
     }
-
+    
+    @Id
     private String id;
     private String to;
     private String say;

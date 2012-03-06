@@ -1,10 +1,11 @@
-package com.my.suicidenote.db;
+package com.my.suicidenote.repo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.my.suicidenote.db.object.Note;
+import com.my.suicidenote.dto.Note;
+
 import java.util.ArrayList;
 import java.util.List;
 

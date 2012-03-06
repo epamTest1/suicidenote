@@ -39,7 +39,7 @@
 
 			<blockquote class="quote tk-acta-display" data-ajax-url="/advice.json" data-interval-value="5sec">
 				<p class="quote-text">
- 					<jsp:useBean id="advice" class="com.my.suicidenote.db.object.Advice" scope="page"/>
+ 					<jsp:useBean id="advice" class="com.my.suicidenote.dto.Advice" scope="page"/>
  					<c:out value="${advice.DEFAULT_ADVICE_TEXT}"/>
 				</p>
 			</blockquote>

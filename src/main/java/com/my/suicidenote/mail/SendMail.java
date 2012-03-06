@@ -1,8 +1,9 @@
 package com.my.suicidenote.mail;
 
-import com.my.suicidenote.db.NoteHelper;
-import com.my.suicidenote.db.SendNoteHelper;
-import com.my.suicidenote.db.object.Note;
+import com.my.suicidenote.dto.Note;
+import com.my.suicidenote.repo.NoteHelper;
+import com.my.suicidenote.repo.SendNoteHelper;
+
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;

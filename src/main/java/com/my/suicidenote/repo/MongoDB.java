@@ -1,4 +1,4 @@
-package com.my.suicidenote.db;
+package com.my.suicidenote.repo;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -11,8 +11,8 @@ import java.util.logging.Logger;
  * @author Andrii_Manuiev
  */
 public class MongoDB {
-//    static final String HOST_NAME = "localhost";
-    static final String HOST_NAME = "mongodb-suicidenote.jelastic.servint.net";
+    static final String HOST_NAME = "localhost";
+//    static final String HOST_NAME = "mongodb-suicidenote.jelastic.servint.net";
     public static final String DB_NAME = "suicidedb";
     static final String USER_NAME = "webUser";
     static final String USER_PASSWORD = "xrokolo6574ss";

@@ -1,19 +1,23 @@
-package com.my.suicidenote.db.object;
+package com.my.suicidenote.dto;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  *
  * @author Andrii_Manuiev
  */
+@Document(collection="advices")
 public class Advice {
     public static final String DEFAULT_ADVICE_TEXT = "It is your responsibility to make your dreams come true";
 
     public static enum DB_FIELD_NAME {
         _id(), text();
     }
-            
+         
+    @Id
     private String id;
     private String text;
 
@@ -21,6 +25,10 @@ public class Advice {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+    
     public String getText() {
         return text;
     }

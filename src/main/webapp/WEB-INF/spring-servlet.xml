@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
@@ -11,17 +11,15 @@
        http://www.springframework.org/schema/context/spring-context-3.0.xsd
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
-       http://www.springframework.org/schema/aop
-       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-       http://www.springframework.org/schema/tx
-       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+       http://www.springframework.org/schema/data/mongo 
+       http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 
-	<mvc:resources mapping = "img/**" location="/img/" />
-	<mvc:resources mapping = "css/**" location="/css/" />
-	<mvc:resources mapping = "js/**" location="/js/" />
-	<mvc:resources mapping = "less/**" location="/less/" />
-	<mvc:resources mapping = "favicon.ico" location="/favicon.ico" />
-	
+	<mvc:resources mapping="img/**" location="/img/" />
+	<mvc:resources mapping="css/**" location="/css/" />
+	<mvc:resources mapping="js/**" location="/js/" />
+	<mvc:resources mapping="less/**" location="/less/" />
+	<mvc:resources mapping="favicon.ico" location="/favicon.ico" />
+
 	<!-- Use @Component annotations for bean definitions -->
 	<context:component-scan base-package="com.my.suicidenote.controllers" />
 	<!-- <context:component-scan base-package="eao" /> -->
@@ -29,11 +27,19 @@
 	<!-- Use @Controller annotations for MVC controller definitions -->
 	<mvc:annotation-driven />
 
+	<context:property-placeholder location="WEB-INF/mongo.properties" />
 
-	<!-- View resolver -->
-	<!-- <bean -->
-	<!-- class="org.springframework.web.servlet.view.InternalResourceViewResolver"> -->
-	<!-- <property name="prefix" value="/WEB-INF/" /> -->
-	<!-- </bean> -->
+	<mongo:mongo host="${mongo.host}" port="${mongo.port}">
+		<!-- <mongo:options connections-per-host=10 /> -->
+	</mongo:mongo>
 
+	<mongo:db-factory mongo-ref="mongo" dbname="${mongo.dbname}"
+		username="${mongo.user}" password="${mongo.password}" />
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
+
+	<mongo:repositories base-package="com.my.suicidenote.repo"
+		mongo-template-ref="mongoTemplate" />
 </beans>
