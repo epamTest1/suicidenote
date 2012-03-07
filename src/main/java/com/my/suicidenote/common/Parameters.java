@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.my.suicidenote.common;
 
 /**
@@ -25,4 +21,7 @@ public class Parameters {
     public static final String WHEN = "when";
     // user timezone
     public static final String TIME_ZONE = "time-zone";
+
+    private Parameters() {
+    }
 }

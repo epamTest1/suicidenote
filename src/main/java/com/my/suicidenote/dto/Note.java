@@ -3,7 +3,6 @@ package com.my.suicidenote.dto;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import java.util.Calendar;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

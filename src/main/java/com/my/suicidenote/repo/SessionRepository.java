@@ -1,9 +1,8 @@
 package com.my.suicidenote.repo;
 
 import com.my.suicidenote.dto.Note;
-import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface NoteRepository extends MongoRepository<Note, Long> {
-	List<Note> findByWhenLessThan(long when);	
+public interface SessionRepository extends MongoRepository<Note, Long> {
+	//List<Note> findByWhenLessThan(long when);	
 }

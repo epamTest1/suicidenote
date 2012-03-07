@@ -2,17 +2,21 @@ package com.my.suicidenote.dto;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  *
  * @author Andrii_Manuiev
  */
+@Document(collection="sessions")
 public class Session {
 
     static public enum DB_FIELD_NAME {
 
         _id(), timestamp(), ip();
     }
+    @Id
     private String id;
     private long timestamp;
     private String ip;
