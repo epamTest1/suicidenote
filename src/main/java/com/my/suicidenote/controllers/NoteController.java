@@ -12,11 +12,19 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+
+import net.tanesha.recaptcha.ReCaptcha;
+import net.tanesha.recaptcha.ReCaptchaResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  *
@@ -30,7 +38,10 @@ public class NoteController {
     
     @Autowired
     SessionRepository sessionRepository;
-            
+
+    @Autowired  
+    private ReCaptcha reCaptcha;     
+
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm");
 
     private String stripHTMLTag(String parameter) {
@@ -71,6 +82,23 @@ public class NoteController {
         note.setWhen(currentUserDate.getTimeInMillis());
         repository.save(note);
     }
+    
+    @RequestMapping(value="/noterecaptcha", method=GET)  
+    public @ResponseBody String generateRecaptcha(){  
+     return "<form action=\"/noterecaptcha\" method=\"post\">"+reCaptcha.createRecaptchaHtml("Error message", null) + "</form>";  
+    }      
+
+    @RequestMapping(value="/noterecaptcha", method=POST)  
+    public String checkRecaptcha(HttpServletRequest request, 
+    		   @RequestParam("recaptcha_challenge_field") final String reCaptchaChallenge,  
+    		   @RequestParam("recaptcha_response_field") final String reCaptchaResponse){  
+    	  ReCaptchaResponse response = reCaptcha.checkAnswer(request.getRemoteAddr(), reCaptchaChallenge, reCaptchaResponse);  
+    	  if(!response.isValid()){
+    		  System.out.println("Recaptcha is invalid");
+    		  return "redirect:/noterecaptcha";
+    	  }    
+    	  return "forward:/";
+    }          
 //    @RequestMapping(value="/notestosend")
 //    public @ResponseBody List<Note> getNotes() {
 //        Calendar currentDate = Calendar.getInstance();              

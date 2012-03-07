@@ -28,8 +28,8 @@
 	<!-- Use @Controller annotations for MVC controller definitions -->
 	<mvc:annotation-driven />
 
-	<context:property-placeholder location="WEB-INF/mongo.properties" />
-
+    <context:property-placeholder location="WEB-INF/mongo.properties,WEB-INF/recaptcha.properties"/>
+     
 	<mongo:mongo host="${mongo.host}" port="${mongo.port}">
 		<!-- <mongo:options connections-per-host=10 /> -->
 	</mongo:mongo>
@@ -43,4 +43,11 @@
 
 	<mongo:repositories base-package="com.my.suicidenote.repo"
 		mongo-template-ref="mongoTemplate" />
+
+	<!-- Creates reCaptcha Instance -->
+	<bean id="reCaptcha" class="net.tanesha.recaptcha.ReCaptchaImpl">
+		<property name="privateKey" value="${recaptcha.private.key}" />
+		<property name="publicKey" value="${recaptcha.public.key}" />
+		<property name="includeNoscript" value="false" />
+	</bean>
 </beans>
