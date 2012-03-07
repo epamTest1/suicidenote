@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,7 @@ public class NoteController {
     
     @RequestMapping(value="/note")
     @ResponseStatus(HttpStatus.OK)
-    public void saveNote(HttpServletRequest request) throws  IOException {
+    public void saveNote(HttpServletRequest request, HttpServletResponse response) throws  IOException {
 
         Note note = new Note();
         note.setFrom(stripHTMLTag(request.getParameter(Parameters.FROM)));
