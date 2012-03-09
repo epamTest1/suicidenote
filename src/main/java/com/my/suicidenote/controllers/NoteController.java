@@ -2,17 +2,20 @@ package com.my.suicidenote.controllers;
 
 import com.my.suicidenote.common.Parameters;
 import com.my.suicidenote.dto.Note;
+import com.my.suicidenote.dto.Session;
 import com.my.suicidenote.repo.NoteRepository;
 import com.my.suicidenote.repo.SessionRepository;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +28,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Controller
 public class NoteController {
 
+    public static final int MINIMAL_INTERVAL = 1;
+    
     @Autowired
     NoteRepository repository;
     
@@ -37,10 +42,26 @@ public class NoteController {
         return parameter != null ? parameter.replaceAll("\\<\\/?([^\\>]*)\\>", "") : "";
     }
 
+    /**
+     * If user already send a note during previous minute then show them a captcha.
+     * 
+     */
+    private boolean isPossibleSpam(String ip) {
+        Calendar currentTime = Calendar.getInstance();
+        Calendar checkTime = currentTime;
+        checkTime.add(Calendar.MINUTE, MINIMAL_INTERVAL);
+        List<Session> lastSessions = sessionRepository.findByIpAndTimestampGreaterThan(ip, checkTime.getTimeInMillis());
+        return lastSessions.size() > 0;
+    }
+            
     @RequestMapping(value = "/note")
     @ResponseStatus(HttpStatus.OK)
     public void saveNote(HttpServletRequest request) throws IOException {
 
+        if (isPossibleSpam(request.getRemoteAddr())) {
+            
+        }
+        
         Note note = new Note();
         note.setFrom(stripHTMLTag(request.getParameter(Parameters.FROM)));
         note.setSay(stripHTMLTag(request.getParameter(Parameters.SAY)));
@@ -70,6 +91,11 @@ public class NoteController {
 
         note.setWhen(currentUserDate.getTimeInMillis());
         repository.save(note);
+        
+        Session session = new Session();
+        session.setIp(request.getRemoteAddr());
+        session.setTimestamp(Calendar.getInstance().getTimeInMillis());
+        sessionRepository.save(session);
     }
 //    @RequestMapping(value="/notestosend")
 //    public @ResponseBody List<Note> getNotes() {
