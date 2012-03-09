@@ -27,7 +27,7 @@ public class Postman {
 	Mailer mailer;
 	
     private Scheduler s = new Scheduler();
-    private static final String CRON_EXPRESSION = "*/5 * * * *";
+    private static final String CRON_EXPRESSION = "*/1 * * * *";
             
     private List<Note> prepareData() {
         Calendar currentDate = Calendar.getInstance();              

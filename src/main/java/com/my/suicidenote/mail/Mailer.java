@@ -33,9 +33,6 @@ public class Mailer {
 	@Autowired
 	NoteRepository repository;
     
-	@Autowired
-	MongoTemplate mongoTemplate;
-	
     public void send(Note note) {
 
         Properties props = new Properties();
@@ -73,11 +70,7 @@ public class Mailer {
 
             Transport.send(simpleMessage);
             //move note to already sent collection
-            
-            repository.delete(note);
-            
-            mongoTemplate.insert(note, "sent_notes");
-            //SendNoteHelper.incertNote(note);
+            repository.moveNoteToSent(note);
         } catch (MessagingException e) {
             Logger.getLogger(Postman.class.getName()).log(Level.SEVERE, null, e);
         }
