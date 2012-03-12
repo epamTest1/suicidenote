@@ -27,8 +27,8 @@
 
 	<script src="js/libs/modernizr-2.5.3.min.js"></script>
 
-	<script type="text/javascript" src="http://use.typekit.com/qkc0yoa.js"></script>
-	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<script src="http://use.typekit.com/qkc0yoa.js"></script>
+	<script>try{Typekit.load();}catch(e){}</script>
 </head>
 <body>
 	<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
@@ -111,6 +111,11 @@
 							</div>
 						</div>
 					</div>
+					<div class="control-group hidden">
+						<label class="control-label"></label>
+
+						<div id="recaptcha-wrapper" class="controls"></div>
+					</div>
 
 					<div class="form-actions">
 						<button id="send-my-note" class="btn btn-danger" type="submit">Send my note</button>
@@ -152,6 +157,7 @@
 	<script src="js/libs/bootstrap/bootstrap-modal.js"></script>
 	<script src="js/libs/scrollTo.js"></script>
 	<script src="js/libs/jquery.validate.min.js"></script>
+	<script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 
 	<script src="js/plugins.js"></script>
 	<script src="js/script.js"></script>
