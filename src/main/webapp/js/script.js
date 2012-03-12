@@ -41,6 +41,7 @@ $(function(){
 			, $removeBtn: $('.icon-minus')
 			, $inputWhen: $('input[type="date"]')
 			, $timeZone: $('#time-zone')
+			, $recaptchaWrapper: $('#recaptcha-wrapper')
 		}
 
 		, setFullHeight: function() {
@@ -292,25 +293,52 @@ $(function(){
 				  }
 
 				, submitHandler: function(form) {
-					$.ajax({
-						url: SN.global.formSubmitUrl()
-						, data: $(form).serialize()
-						, success: function(){
-							SN.global.$successModal.modal('show');
-
-							SN.global.$successModal.on('hidden', function() {
-								SN.global.$window.scrollTo($('body'), 1200, {onAfter: function() {}});
-							});
-
-							SN.clearForm($(form).find(':input'));
-
-						  }
-						, error: function(jqXHR, textStatus, errorThrown){
-							log('Text status: '+ textStatus);
-							log('Error thrown: '+ errorThrown);
-						}
-					});
+					SN.sendAjax4Submit(form);
 				}
+			});
+		}
+
+		, sendAjax4Submit: function(form) {
+			$.ajax({
+				url: SN.global.formSubmitUrl()
+				, type: 'post'
+				, data: $(form).serialize()
+				, success: function(data, textStatus) {
+
+					SN.global.$successModal.modal('show');
+
+					SN.global.$successModal.on('hidden', function() {
+						SN.global.$window.scrollTo($('body'), 1200, {onAfter: function() {}});
+					});
+
+					SN.clearForm($(form).find(':input'));
+				  }
+				, error: function(jqXHR, textStatus, errorThrown) {
+					log('Text status: '+ textStatus);
+					log('Error thrown: '+ errorThrown);
+
+					switch (textStatus) {
+						case '208': // for second or more attempt, show captcha
+							SN.showRecaptcha();
+							break;
+
+						case '418': // entered wrong text from captcha
+							Recaptcha.destroy();
+							SN.showRecaptcha();
+							break;
+					}
+				}
+			});
+		}
+
+		, showRecaptcha: function() {
+			SN.formElems.$recaptchaWrapper
+				.parents('.control-group')
+				.removeClass('hidden');
+
+			Recaptcha.create('6LcEoM4SAAAAAPOVa8ZoB_EPECHZIf2IaMF0Bmae', 'recaptcha-wrapper', {
+				theme: 'clean',
+				callback: Recaptcha.focus_response_field
 			});
 		}
 
