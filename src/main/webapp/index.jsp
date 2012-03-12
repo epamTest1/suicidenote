@@ -49,6 +49,8 @@
 			</div>
 		</section>
 
+		<hr class="section-separator">
+
 		<section id="section-form" class="section_form">
 			<form class="form-horizontal" data-ajax-url="/note?" data-recaptcha-url="/noterecaptcha">
 				<fieldset>
@@ -124,7 +126,7 @@
 			</form>
 		</section>
 
-		<hr>
+		<hr class="footer-separator">
 
 		<footer>
 			<p>&copy; Suicide Note 2012</p>

@@ -17,23 +17,24 @@ html {
 	overflow: hidden;
 }
 
-body {
-	padding-top: 60px;
-}
 
 @import "bootstrap/responsive.less";
 
 
 .section_hello {
+	position: relative;
+	z-index: 1;
+	margin: 60px 0;
 	text-align: center;
 
 	.quote {
 		position: relative;
-		z-index: 1;
+		z-index: 2;
 		padding: 60px;
+		margin-bottom: 60px;
 		border: 0;
   		border-radius: 6px;
-		margin: 0;
+
 		background-color: #F5F5F5;
 		box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
 
@@ -48,7 +49,7 @@ body {
 			position: absolute;
 			top: 10px;
 			left: 8px;
-			z-index: 2;
+			z-index: 3;
 			color: #999;
 			font-family: Cochin,Georgia, "Times New Roman", serif;
 			font-style: italic;
@@ -62,7 +63,7 @@ body {
 			position: absolute;
 			bottom: 10px;
 			right: 8px;
-			z-index: 2;
+			z-index: 3;
 			display: block;
 			width: 0.68em;
 			height: 0.42em;
@@ -78,6 +79,11 @@ body {
 	}
 
 	.still-want {
+		position: absolute;
+		z-index: 2;
+		bottom: 0;
+		width: 100%;
+
 		.still-want-link {
 			font-size: @baseFontSize * 4;
 			line-height: @baseLineHeight * 4;
@@ -97,7 +103,19 @@ body {
 	}
 }
 
+.section-separator {
+	margin: 0;
+}
+
 .section_form {
+	position: relative;
+	z-index: 1;
+	padding: 60px 0 0;
+
+	legend {
+		border-bottom: 0; //bootstrap reset
+	}
+
 	select {
 		float: left;
 	}
@@ -118,9 +136,8 @@ body {
  	}
 }
 
-
 footer {
-	padding-bottom: 18px;
+	padding-bottom: 60px;
 	text-align: left;
 	text-shadow: white 1px 1px 1px, #005580 1px 1px 1px;
 }

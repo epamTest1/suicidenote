@@ -21,7 +21,6 @@ $(function(){
 				return SN.formElems.$form.data('ajax-url');
 			  }
 
-			, $hr: $('hr')
 			, $footer: $('footer')
 			, $successModal: $('#successModal')
 
@@ -48,22 +47,38 @@ $(function(){
 		}
 
 		, setFullHeight: function() {
-			//NOTE: Sorry for this :(
+			// first screen (Hello section)
 			var windowHeight = SN.global.$window.height()
-				, quoteHeight = SN.quoteElems.$quote.outerHeight() + 60 // top padding
+				, quoteHeight = SN.quoteElems.$quote.outerHeight()
 				, stillWantHeight = SN.quoteElems.$stillWant.outerHeight()
 				, sectionHelloHeight = quoteHeight + stillWantHeight
-				, firstScreenHeight = (sectionHelloHeight < windowHeight) ? windowHeight : sectionHelloHeight
+				, firstScreenHeight = Math.max(sectionHelloHeight + (60 + 60), windowHeight);
 
-				, sectionFormHeight = SN.formElems.$sectionForm.outerHeight()
-				, hrHeight = 38 // margins + borders
+			SN.quoteElems.$sectionHello.css('height', firstScreenHeight);
+
+			var freeHeight4Link = windowHeight - quoteHeight + (60 + 60);
+
+			SN.quoteElems.$stillWant.animate({
+				bottom: (freeHeight4Link - stillWantHeight)/2
+			}, 'fast');
+
+			// second screen (Form section + hr + footer)
+			var formHeight = SN.formElems.$form.outerHeight()
+				, hrHeight = 38
 				, footerHeight = SN.global.$footer.outerHeight()
-				, secondScreenHeight = (sectionFormHeight < windowHeight) ? windowHeight - (hrHeight + footerHeight) : sectionFormHeight;
+				, secondSectionHeight = Math.max(formHeight, 60 + hrHeight + footerHeight);
 
-			SN.quoteElems.$sectionHello.css('height', Math.max(firstScreenHeight, 1));
-			SN.quoteElems.$stillWant.css('margin-top', Math.max((firstScreenHeight - quoteHeight)/2 - stillWantHeight/2, 0));
+			SN.formElems.$sectionForm.css('height', secondSectionHeight);
 
-			SN.formElems.$sectionForm.css('height', Math.max(secondScreenHeight, 1));
+			SN.fixHorizont(windowHeight);
+		}
+
+		, fixHorizont: function(windowHeight) {
+			if (SN.global.$window.scrollTop() >= windowHeight) {
+				SN.scroll2Form();
+			} else {
+				SN.scroll2Top();
+			}
 		}
 
 		, getNewQuote: function() {
@@ -110,12 +125,20 @@ $(function(){
 			});
 		}
 
-		, bindScrollTo: function() {
+		, bindScroll2Top: function() {
 			SN.quoteElems.$stillWantLink.on('click', function(e) {
 				e.preventDefault();
 
-				SN.global.$html.animate({scrollTop: $('#section-form').offset().top}, 'slow');
+				SN.scroll2Form();
 			});
+		}
+
+		, scroll2Top: function() {
+			SN.global.$html.animate({scrollTop: 0}, 'slow');
+		}
+
+		, scroll2Form: function() {
+			SN.global.$html.animate({scrollTop: $('#section-form').offset().top}, 'slow');
 		}
 
 		, getInputTemplate: function(inputVariant) {
@@ -310,9 +333,7 @@ $(function(){
 
 					SN.global.$successModal.modal('show');
 
-					SN.global.$successModal.on('hidden', function() {
-						SN.global.$html.animate({scrollTop: 0}, 'slow');
-					});
+					SN.global.$successModal.on('hidden', SN.scroll2Top);
 
 					SN.clearForm($(form).find(':input'));
 				  }
@@ -372,7 +393,7 @@ $(function(){
 
 			SN.setFullHeight();
 			SN.winResize();
-			SN.bindScrollTo();
+			SN.bindScroll2Top();
 			SN.bindAddCustomInput();
 			SN.bindAddSendToInput();
 			SN.bindRemoveInput();
