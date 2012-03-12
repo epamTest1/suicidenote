@@ -50,7 +50,7 @@
 		</section>
 
 		<section id="section-form" class="section_form">
-			<form class="form-horizontal" data-ajax-url="/note?">
+			<form class="form-horizontal" data-ajax-url="/note?" data-recaptcha-url="/noterecaptcha">
 				<fieldset>
 					<legend>Leave your note if you want</legend>
 					<div class="control-group">
