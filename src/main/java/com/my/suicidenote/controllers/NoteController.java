@@ -53,7 +53,6 @@ public class NoteController {
     private boolean isPossibleSpam(String ip) {
         Calendar checkTime = Calendar.getInstance();
         checkTime.add(Calendar.MINUTE, MINIMAL_INTERVAL);
-        long time = checkTime.getTimeInMillis();
         List<Session> lastSessions = sessionRepository.findByIpAndTimestampGreaterThan(ip, checkTime.getTimeInMillis());
         return lastSessions.size() > 0;
     }
