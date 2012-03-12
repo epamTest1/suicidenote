@@ -16,7 +16,7 @@
 	<meta name="viewport" content="width=device-width">
 
 	<link rel="stylesheet/less" href="less/style.less">
-	<script src="js/libs/less-1.2.1.min.js"></script>
+	<script src="js/libs/less-1.3.0.min.js"></script>
 
 	<link type="text/css" rel="stylesheet" href="css/libs/jquery-ui-1.8.18/snote-theme/jquery-ui-1.8.18.css">
 	<link type="text/css" rel="stylesheet" href="css/libs/jquery-ui-1.8.18/snote-theme/jquery-ui-timepicker-addon.css">

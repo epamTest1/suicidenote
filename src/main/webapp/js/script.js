@@ -207,8 +207,13 @@ $(function(){
 		}
 
 		, bindSendMyNote: function() {
-			$.validator.addMethod('letterswithbasicpunc', function(value, element) {
-				return this.optional(element) || /^[a-z-.,()'\"\s]+$/i.test(value);
+			$.validator.addMethod('lettersWithBasicPunc', function(value, element) {
+				return this.optional(element) || /^[a-z-.,()'"\s]+$/i.test(value);
+			}
+			, 'Letters with punctuation only please');
+
+			$.validator.addMethod('lettersWithBasicPuncExt', function(value, element) {
+				return this.optional(element) || /^[a-z-.,()'"!?:;\s]+$/i.test(value);
 			}
 			, 'Letters with punctuation only please');
 
@@ -218,12 +223,12 @@ $(function(){
 					'from': {
 						required: true
 						, minlength: 4
-						, letterswithbasicpunc: true
+						, lettersWithBasicPunc: true
 					  }
 
 					, 'to-costum': {
 						minlength: 4
-						, letterswithbasicpunc: true
+						, lettersWithBasicPunc: true
 						, required: function() {
 							return $('select[name="to"]').val() === 'type-name';
 						}
@@ -232,7 +237,7 @@ $(function(){
 					, 'i-want-to-say': {
 						required: true
 						, minlength: 5
-						, letterswithbasicpunc: true
+						, lettersWithBasicPuncExt: true
 					  }
 
 					, 'send-to': {
@@ -251,18 +256,18 @@ $(function(){
 					'from': {
 						required: 'Please enter a name and last name'
 						, minlength: 'Your name must consist of at least 4 characters'
-						, letterswithbasicpunc: 'Letters with punctuation only please'
+						, lettersWithBasicPunc: 'Letters with punctuation only please'
 					}
 
 					, 'to-costum': {
 						minlength: 'Name must consist of at least 4 characters'
-						, letterswithbasicpunc: 'Letters with punctuation only please'
+						, lettersWithBasicPunc: 'Letters with punctuation only please'
 					}
 
 					, 'i-want-to-say': {
 						required: 'Please enter notice'
 						, minlength: 'Notice must consist of at least 5 characters'
-						, letterswithbasicpunc: 'Letters with punctuation only please'
+						, lettersWithBasicPuncExt: 'Letters with punctuation only please'
 					  }
 
 					, 'send-to': 'Please enter a valid email address'

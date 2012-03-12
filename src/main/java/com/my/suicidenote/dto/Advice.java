@@ -41,7 +41,7 @@ public class Advice {
     }
 
     public Advice(String text) {
-    	setText(text);
+    	this.text = text;
     }
     
     public BasicDBObject toDbObject() {

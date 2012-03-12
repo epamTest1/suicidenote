@@ -2,7 +2,6 @@ package com.my.suicidenote.mail;
 
 import com.my.suicidenote.dto.Note;
 import com.my.suicidenote.repo.NoteRepository;
-
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,10 +9,7 @@ import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Component;
 
 /**
