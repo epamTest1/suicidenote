@@ -58,7 +58,7 @@ public class NoteController {
     }
 
     @ExceptionHandler(SpamException.class)
-    @ResponseStatus(HttpStatus.ALREADY_REPORTED)
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
     public void possibleSpamException() {
     }
     
