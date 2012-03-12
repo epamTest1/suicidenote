@@ -11,6 +11,6 @@ public interface SessionRepository extends MongoRepository<Session, Long> {
         
         List<Session> findByIp(String ip);
         
-        @Query("{ 'ip' : 0, 'timestamp' : {$gt : 1} }")
+        @Query("{ 'ip' : ?0, 'timestamp' : {$gt : ?1} }")
         List<Session> findByIpAndTimestampGreaterThan(String ip, long timestamp);
 }
