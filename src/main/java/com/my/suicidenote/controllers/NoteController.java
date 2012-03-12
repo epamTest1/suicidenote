@@ -3,9 +3,9 @@ package com.my.suicidenote.controllers;
 import com.my.suicidenote.common.Parameters;
 import com.my.suicidenote.dto.Note;
 import com.my.suicidenote.dto.Session;
+import com.my.suicidenote.exception.SpamException;
 import com.my.suicidenote.repo.NoteRepository;
 import com.my.suicidenote.repo.SessionRepository;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,20 +14,14 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
@@ -36,7 +30,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 public class NoteController {
 
-    public static final int MINIMAL_INTERVAL = 1;
+    public static final int MINIMAL_INTERVAL = -1;
     
     @Autowired
     NoteRepository repository;
@@ -55,22 +49,26 @@ public class NoteController {
 
     /**
      * If user already send a note during previous minute then show them a captcha.
-     * 
      */
     private boolean isPossibleSpam(String ip) {
-        Calendar currentTime = Calendar.getInstance();
-        Calendar checkTime = currentTime;
+        Calendar checkTime = Calendar.getInstance();
         checkTime.add(Calendar.MINUTE, MINIMAL_INTERVAL);
+        long time = checkTime.getTimeInMillis();
         List<Session> lastSessions = sessionRepository.findByIpAndTimestampGreaterThan(ip, checkTime.getTimeInMillis());
         return lastSessions.size() > 0;
     }
-            
+
+    @ExceptionHandler(SpamException.class)
+    @ResponseStatus(HttpStatus.ALREADY_REPORTED)
+    public void possibleSpamException() {
+    }
+    
     @RequestMapping(value = "/note")
     @ResponseStatus(HttpStatus.OK)
-    public void saveNote(HttpServletRequest request) throws IOException {
+    public void saveNote(HttpServletRequest request) throws SpamException {
 
         if (isPossibleSpam(request.getRemoteAddr())) {
-            
+            throw new SpamException();
         }
         
         Note note = new Note();
@@ -124,7 +122,8 @@ public class NoteController {
     		  return "redirect:/noterecaptcha";
     	  }    
     	  return "forward:/";
-    }          
+    }
+    
 //    @RequestMapping(value="/notestosend")
 //    public @ResponseBody List<Note> getNotes() {
 //        Calendar currentDate = Calendar.getInstance();              
