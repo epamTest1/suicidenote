@@ -155,7 +155,6 @@
 	<script src="js/libs/jquery-ui-timepicker-addon.js"></script>
 	<script src="js/libs/bootstrap/bootstrap-transition.js"></script>
 	<script src="js/libs/bootstrap/bootstrap-modal.js"></script>
-	<script src="js/libs/scrollTo.js"></script>
 	<script src="js/libs/jquery.validate.min.js"></script>
 	<script src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 

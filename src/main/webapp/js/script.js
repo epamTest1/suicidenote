@@ -6,6 +6,7 @@ $(function(){
 			resizeTimer: null
 			, sendToItems: 0
 			, $window: $(window)
+			, $html: $('html')
 
 			, quoteInterval: function() {
 				return SN.quoteElems.$quote.data('interval-value').slice(0, -3) * 1000 || 5000;
@@ -23,6 +24,8 @@ $(function(){
 			, $hr: $('hr')
 			, $footer: $('footer')
 			, $successModal: $('#successModal')
+
+			, recaptchaPubKey: '6LcEoM4SAAAAAPOVa8ZoB_EPECHZIf2IaMF0Bmae'
 		}
 
 		, quoteElems: {
@@ -111,7 +114,7 @@ $(function(){
 			SN.quoteElems.$stillWantLink.on('click', function(e) {
 				e.preventDefault();
 
-				SN.global.$window.scrollTo(SN.formElems.$sectionForm, 1200, {onAfter: function() {}});
+				SN.global.$html.animate({scrollTop: $('#section-form').offset().top}, 'slow');
 			});
 		}
 
@@ -308,7 +311,7 @@ $(function(){
 					SN.global.$successModal.modal('show');
 
 					SN.global.$successModal.on('hidden', function() {
-						SN.global.$window.scrollTo($('body'), 1200, {onAfter: function() {}});
+						SN.global.$html.animate({scrollTop: 0}, 'slow');
 					});
 
 					SN.clearForm($(form).find(':input'));
@@ -322,7 +325,7 @@ $(function(){
 							SN.showRecaptcha();
 							break;
 
-						case '418': // entered wrong text from captcha
+						case '418': // entered wrong text in captcha
 							Recaptcha.destroy();
 							SN.showRecaptcha();
 							break;
@@ -336,7 +339,7 @@ $(function(){
 				.parents('.control-group')
 				.removeClass('hidden');
 
-			Recaptcha.create('6LcEoM4SAAAAAPOVa8ZoB_EPECHZIf2IaMF0Bmae', 'recaptcha-wrapper', {
+			Recaptcha.create(SN.global.recaptchaPubKey, 'recaptcha-wrapper', {
 				theme: 'clean',
 				callback: Recaptcha.focus_response_field
 			});
