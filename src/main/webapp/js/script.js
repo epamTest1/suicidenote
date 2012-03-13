@@ -336,12 +336,12 @@ $(function(){
 				, success: function(data, textStatus, jqXHR) {
 
 					switch (jqXHR.status) {
-						case '203': // entered wrong text in captcha
+						case 203: // entered wrong text in captcha
 							Recaptcha.destroy();
 							SN.showRecaptcha();
 							break;
 
-						case '208': // for second or more attempt, show captcha
+						case 208: // for second or more attempt, show captcha
 							SN.showRecaptcha();
 							break;
 

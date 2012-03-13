@@ -14,6 +14,8 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,10 @@ public class NoteController {
 
     public static final int MINIMAL_INTERVAL_IN_MINUTES = -1;
     public static final int SESSION_LIFETIME_IN_HOUR = -1;
+    
+    public static final int HTTP_STATUS_NON_AUTHORITATIVE_INFORMATION  = 203;
+    public static final int HTTP_STATUS_ALREADY_REPORTED = 208;
+    
     @Autowired
     NoteRepository repository;
     @Autowired
@@ -64,16 +70,21 @@ public class NoteController {
         return lastSessions.size() > 0;
     }
 
-    @ExceptionHandler(SpamException.class)
-    @ResponseStatus(HttpStatus.ALREADY_REPORTED)
-    public void possibleSpamException() {
-    }
-
     @RequestMapping(value = "/note")
-    @ResponseStatus(HttpStatus.OK)
-    public void saveNote(HttpServletRequest request) throws SpamException {
-        if (isPossibleSpam(request.getRemoteAddr())) {
-            throw new SpamException();
+    public void saveNote(HttpServletRequest request, HttpServletResponse response) throws SpamException {
+    	String reCaptchaChallenge = request.getParameter("recaptcha_challenge_field");
+    	String reCaptchaResponse = request.getParameter("recaptcha_response_field");
+    	if (reCaptchaChallenge != null) {
+            ReCaptchaResponse recaptchaChecker = reCaptcha.checkAnswer(request.getRemoteAddr(), reCaptchaChallenge, reCaptchaResponse);
+            if (!recaptchaChecker.isValid()) {
+            	response.setStatus(HTTP_STATUS_NON_AUTHORITATIVE_INFORMATION);     
+            	return;
+            }
+    	}
+    	else if (isPossibleSpam(request.getRemoteAddr())) {
+    		response.setStatus(HTTP_STATUS_ALREADY_REPORTED);
+        	return;
+            //throw new SpamException();
         }
 
         Note note = new Note();
@@ -89,6 +100,11 @@ public class NoteController {
         }
         note.setSentTo(sendTo.toString());
         note.setTo(stripHTMLTag(request.getParameter(Parameters.TO)));
+        
+        String timeZone = stripHTMLTag(request.getParameter(Parameters.TIME_ZONE));
+		timeZone = timeZone.startsWith("-") ? "GMT".concat(timeZone) : "GMT+".concat(timeZone);
+		note.setTimeZone(timeZone);
+		
         Calendar currentUserDate = Calendar.getInstance(TimeZone.getTimeZone(note.getTimeZone()));
         try {
             currentUserDate.setTime(sdf.parse(stripHTMLTag(request.getParameter(Parameters.WHEN))));
