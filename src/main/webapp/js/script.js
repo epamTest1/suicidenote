@@ -3,7 +3,8 @@ $(function(){
 	var SN = {
 
 		global: {
-			resizeTimer: null
+			isMac: /mac/i.test(navigator.userAgent.toLowerCase())
+			, resizeTimer: null
 			, quoteRequest: null
 			, sendToItems: 0
 			, $window: $(window)
@@ -45,6 +46,7 @@ $(function(){
 			, $inputWhen: $('input[type="date"]')
 			, $timeZone: $('#time-zone')
 			, $recaptchaWrapper: $('#recaptcha-wrapper')
+			, $sendMyNote: $('#send-my-note')
 		}
 
 		, setFullHeight: function() {
@@ -127,7 +129,7 @@ $(function(){
 			});
 		}
 
-		, bindScroll2Top: function() {
+		, bindScroll2Form: function() {
 			SN.quoteElems.$stillWantLink.on('click', function(e) {
 				e.preventDefault();
 
@@ -337,18 +339,21 @@ $(function(){
 
 					switch (jqXHR.status) {
 						case 203: // entered wrong text in captcha
-							Recaptcha.destroy();
-							SN.showRecaptcha();
+								Recaptcha.reload();
 							break;
 
 						case 208: // for second or more attempt, show captcha
-							SN.showRecaptcha();
+								SN.showRecaptcha();
 							break;
 
 						default:
 							SN.global.$successModal.modal('show');
 							SN.global.$successModal.on('hidden', SN.scroll2Top);
 							SN.clearForm($(form).find(':input'));
+
+							if (SN.formElems.$recaptchaWrapper.data('recaptcha')) {
+								Recaptcha.reload();
+							}
 					}
 				  }
 				, error: function(jqXHR, textStatus, errorThrown) {
@@ -360,6 +365,7 @@ $(function(){
 
 		, showRecaptcha: function() {
 			SN.formElems.$recaptchaWrapper
+				.data('recaptcha', true)
 				.parents('.control-group')
 				.removeClass('hidden');
 
@@ -392,15 +398,50 @@ $(function(){
 			});
 		}
 
-		, preventKeyAction: function() {
+		, keyHandler: function() {
+			$(document).bind('keydown', function (e) {
 
+				switch (e.which) {
+					case 13: // Enter
+
+							// Submit form by ctrl+enter (command+enter for Mac)
+							if ((e.ctrlKey || e.metaKey && SN.global.isMac)) {
+								SN.formElems.$sendMyNote.trigger('click');
+							}
+						break;
+
+					case 9: // Tab
+					case 32: // Space
+							if ($(e.target).is(':input')) return;
+
+							e.preventDefault();
+
+							if (e.shiftKey) SN.scroll2Top();
+						break;
+
+					case 33: // PgUp
+					case 38: // Up
+					case 34: // PgDown
+					case 40: // Down
+					case 35: // End
+							e.preventDefault();
+						break;
+
+					case 36: // Home
+					case 27: // Esc
+							e.preventDefault();
+
+							SN.scroll2Top();
+						break;
+				}
+			});
 		}
 
 		, init: function() {
 
 			SN.setFullHeight();
 			SN.winResize();
-			SN.bindScroll2Top();
+			SN.bindScroll2Form();
 			SN.bindAddCustomInput();
 			SN.bindAddSendToInput();
 			SN.bindRemoveInput();
@@ -408,7 +449,7 @@ $(function(){
 			//SN.startQuoteRequest();
 			SN.initDatePicker();
 			SN.getTimeZone();
-			//SN.preventKeyAction(); TODO:
+			SN.keyHandler();
 		}
 
 	};
