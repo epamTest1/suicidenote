@@ -73,14 +73,14 @@ $(function(){
 
 			SN.formElems.$sectionForm.css('height', secondSectionHeight);
 
-			SN.fixHorizont(windowHeight);
+			SN.fixHorizont(firstScreenHeight);
 		}
 
-		, fixHorizont: function(windowHeight) {
-			if (SN.global.$window.scrollTop() >= windowHeight) {
-				SN.scroll2Form();
-			} else {
+		, fixHorizont: function(firstScreenHeight) {
+			if (SN.global.$window.scrollTop() <= firstScreenHeight) {
 				SN.scroll2Top();
+			} else {
+				SN.scroll2Form();
 			}
 		}
 
