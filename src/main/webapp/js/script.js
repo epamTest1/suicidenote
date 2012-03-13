@@ -89,7 +89,6 @@ $(function(){
 				url: SN.global.quoteUrl()
 				, dataType: 'json'
 				, beforeSend: function() {
-
 					SN.stopQuoteRequest();
 				  }
 				, success: function(data){
@@ -111,6 +110,7 @@ $(function(){
 		}
 
 		, startQuoteRequest: function() {
+			SN.stopQuoteRequest();
 			SN.global.quoteRequest = setInterval(SN.sendAjax4NewQuote, SN.global.quoteInterval());
 		}
 
