@@ -4,6 +4,7 @@ $(function(){
 
 		global: {
 			resizeTimer: null
+			, quoteRequest: null
 			, sendToItems: 0
 			, $window: $(window)
 			, $html: $('html')
@@ -81,37 +82,38 @@ $(function(){
 			}
 		}
 
-		, getNewQuote: function() {
-			var ajaxInterval;
+		, sendAjax4NewQuote: function() {
+			$.ajax({
+				url: SN.global.quoteUrl()
+				, dataType: 'json'
+				, beforeSend: function() {
 
-			function sendRequest() {
-				$.ajax({
-					url: SN.global.quoteUrl()
-					, dataType: 'json'
-					, beforeSend: function() {
-						clearInterval(ajaxInterval);
-					  }
-					, success: function(data){
+					SN.stopQuoteRequest();
+				  }
+				, success: function(data){
 
-						SN.quoteElems.$quoteText.fadeOut('slow', function() {
-							$(this).html(data['text']);
-							$(this).fadeIn('fast', startInterval);
-						});
-					  }
-					, error: function(jqXHR, textStatus, errorThrown){
-						log('textStatus: '+ textStatus);
-						log('errorThrown: '+ errorThrown);
+					SN.quoteElems.$quoteText.fadeOut('slow', function() {
 
-						startInterval();
-					}
-				});
-			}
+						$(this).html(data['text']);
+						$(this).fadeIn('fast', SN.startQuoteRequest);
+					});
+				  }
+				, error: function(jqXHR, textStatus, errorThrown){
 
-			function startInterval() {
-				ajaxInterval = setInterval(sendRequest, SN.global.quoteInterval());
-			}
+					log('textStatus: '+ textStatus);
+					log('errorThrown: '+ errorThrown);
 
-			startInterval();
+					SN.startQuoteRequest();
+				}
+			});
+		}
+
+		, startQuoteRequest: function() {
+			SN.global.quoteRequest = setInterval(SN.sendAjax4NewQuote, SN.global.quoteInterval());
+		}
+
+		, stopQuoteRequest: function() {
+			clearInterval(SN.global.quoteRequest);
 		}
 
 		, winResize: function() {
@@ -134,10 +136,12 @@ $(function(){
 		}
 
 		, scroll2Top: function() {
+			SN.startQuoteRequest();
 			SN.global.$html.animate({scrollTop: 0}, 'slow');
 		}
 
 		, scroll2Form: function() {
+			SN.stopQuoteRequest();
 			SN.global.$html.animate({scrollTop: $('#section-form').offset().top}, 'slow');
 		}
 
@@ -398,7 +402,7 @@ $(function(){
 			SN.bindAddSendToInput();
 			SN.bindRemoveInput();
 			SN.bindSendMyNote();
-			SN.getNewQuote();
+			//SN.startQuoteRequest();
 			SN.initDatePicker();
 			SN.getTimeZone();
 		}
