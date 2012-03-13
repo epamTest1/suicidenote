@@ -7,7 +7,7 @@ $(function(){
 			, quoteRequest: null
 			, sendToItems: 0
 			, $window: $(window)
-			, $html: $('html')
+			, $htmlbody: $('html,body')
 
 			, quoteInterval: function() {
 				return SN.quoteElems.$quote.data('interval-value').slice(0, -3) * 1000 || 5000;
@@ -137,12 +137,12 @@ $(function(){
 
 		, scroll2Top: function() {
 			SN.startQuoteRequest();
-			SN.global.$html.animate({scrollTop: 0}, 'slow');
+			SN.global.$htmlbody.animate({scrollTop: 0}, 'slow');
 		}
 
 		, scroll2Form: function() {
 			SN.stopQuoteRequest();
-			SN.global.$html.animate({scrollTop: $('#section-form').offset().top}, 'slow');
+			SN.global.$htmlbody.animate({scrollTop: $('#section-form').offset().top}, 'slow');
 		}
 
 		, getInputTemplate: function(inputVariant) {
@@ -333,28 +333,27 @@ $(function(){
 				url: SN.global.formSubmitUrl()
 				, type: 'post'
 				, data: $(form).serialize()
-				, success: function(data, textStatus) {
-
-					SN.global.$successModal.modal('show');
-
-					SN.global.$successModal.on('hidden', SN.scroll2Top);
-
-					SN.clearForm($(form).find(':input'));
-				  }
-				, error: function(jqXHR, textStatus, errorThrown) {
-					log('Text status: '+ textStatus);
-					log('Error thrown: '+ errorThrown);
+				, success: function(data, textStatus, jqXHR) {
 
 					switch (jqXHR.status) {
+						case '203': // entered wrong text in captcha
+							Recaptcha.destroy();
+							SN.showRecaptcha();
+							break;
+
 						case '208': // for second or more attempt, show captcha
 							SN.showRecaptcha();
 							break;
 
-						case '418': // entered wrong text in captcha
-							Recaptcha.destroy();
-							SN.showRecaptcha();
-							break;
+						default:
+							SN.global.$successModal.modal('show');
+							SN.global.$successModal.on('hidden', SN.scroll2Top);
+							SN.clearForm($(form).find(':input'));
 					}
+				  }
+				, error: function(jqXHR, textStatus, errorThrown) {
+					log('Text status: '+ textStatus);
+					log('Error thrown: '+ errorThrown);
 				}
 			});
 		}
@@ -393,6 +392,10 @@ $(function(){
 			});
 		}
 
+		, preventKeyAction: function() {
+
+		}
+
 		, init: function() {
 
 			SN.setFullHeight();
@@ -405,6 +408,7 @@ $(function(){
 			//SN.startQuoteRequest();
 			SN.initDatePicker();
 			SN.getTimeZone();
+			//SN.preventKeyAction(); TODO:
 		}
 
 	};
