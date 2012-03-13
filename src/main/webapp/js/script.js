@@ -341,7 +341,7 @@ $(function(){
 					log('Text status: '+ textStatus);
 					log('Error thrown: '+ errorThrown);
 
-					switch (textStatus) {
+					switch (jqXHR.status) {
 						case '208': // for second or more attempt, show captcha
 							SN.showRecaptcha();
 							break;
