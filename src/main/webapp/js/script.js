@@ -419,16 +419,21 @@ $(function(){
 							if (e.shiftKey) SN.scroll2Top();
 						break;
 
-					case 33: // PgUp
 					case 38: // Up
-					case 34: // PgDown
 					case 40: // Down
-					case 35: // End
 							e.preventDefault();
 						break;
 
-					case 36: // Home
+					case 34: // PgDown
+					case 35: // End
+							e.preventDefault();
+
+							SN.scroll2Form();
+						break;
+
 					case 27: // Esc
+					case 33: // PgUp
+					case 36: // Home
 							e.preventDefault();
 
 							SN.scroll2Top();
