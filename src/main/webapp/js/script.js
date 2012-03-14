@@ -69,7 +69,7 @@ $(function(){
 			var formHeight = SN.formElems.$form.outerHeight()
 				, hrHeight = 38
 				, footerHeight = SN.global.$footer.outerHeight()
-				, secondSectionHeight = Math.max(formHeight, 60 + hrHeight + footerHeight);
+				, secondSectionHeight = Math.max(formHeight, windowHeight - (60 + hrHeight + footerHeight));
 
 			SN.formElems.$sectionForm.css('height', secondSectionHeight);
 
