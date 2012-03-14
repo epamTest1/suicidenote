@@ -44,6 +44,7 @@ $(function(){
 			, $addSendToBtn: $('.icon-plus')
 			, $removeBtn: $('.icon-minus')
 			, $inputWhen: $('input[type="date"]')
+			, $calendarBtn: $('.icon-calendar')
 			, $timeZone: $('#time-zone')
 			, $recaptchaWrapper: $('#recaptcha-wrapper')
 			, $sendMyNote: $('#send-my-note')
@@ -377,6 +378,10 @@ $(function(){
 
 		, initDatePicker: function() {
 			SN.formElems.$inputWhen.datetimepicker();
+
+			SN.formElems.$calendarBtn.click(function(){
+				SN.formElems.$inputWhen.trigger('focus');
+			});
 		}
 
 		, getTimeZone: function() {
