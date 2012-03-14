@@ -109,6 +109,7 @@ $(function(){
 		}
 
 		, startQuoteRequest: function() {
+			SN.stopQuoteRequest();
 			SN.global.quoteRequest = setInterval(SN.sendAjax4NewQuote, SN.global.quoteInterval());
 		}
 
