@@ -9,21 +9,22 @@ import com.my.suicidenote.repo.SessionRepository;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -84,7 +85,6 @@ public class NoteController {
     	else if (isPossibleSpam(request.getRemoteAddr())) {
     		response.setStatus(HTTP_STATUS_ALREADY_REPORTED);
         	return;
-            //throw new SpamException();
         }
 
         Note note = new Note();
@@ -100,21 +100,28 @@ public class NoteController {
         }
         note.setSentTo(sendTo.toString());
         note.setTo(stripHTMLTag(request.getParameter(Parameters.TO)));
-        
+
         String timeZone = stripHTMLTag(request.getParameter(Parameters.TIME_ZONE));
-		timeZone = timeZone.startsWith("-") ? "GMT".concat(timeZone) : "GMT+".concat(timeZone);
-		note.setTimeZone(timeZone);
+        // TODO : add more logical logic :)
+        timeZone = timeZone.startsWith("-") ? "GMT".concat(timeZone).replace("-", "+") : "GMT-".concat(timeZone);
+        note.setTimeZone(timeZone);
 		
-        Calendar currentUserDate = Calendar.getInstance(TimeZone.getTimeZone(note.getTimeZone()));
+        Calendar userTime = new GregorianCalendar(TimeZone.getTimeZone(note.getTimeZone()));
         try {
-            currentUserDate.setTime(sdf.parse(stripHTMLTag(request.getParameter(Parameters.WHEN))));
-		}
-		catch (ParseException ex) {
+            userTime.setTime(sdf.parse(stripHTMLTag(request.getParameter(Parameters.WHEN))));
+        }
+            catch (ParseException ex) {
             Logger.getLogger(NoteController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Calendar currentHostDate = Calendar.getInstance();
-        currentHostDate.setTimeInMillis(currentUserDate.getTimeInMillis());
-        note.setWhen(currentUserDate.getTimeInMillis());
+        Calendar serverTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        
+        serverTime.set(Calendar.HOUR_OF_DAY, userTime.get(Calendar.HOUR_OF_DAY));
+        serverTime.set(Calendar.MINUTE, userTime.get(Calendar.MINUTE));
+        serverTime.set(Calendar.DAY_OF_MONTH, userTime.get(Calendar.DAY_OF_MONTH));
+        serverTime.set(Calendar.MONTH, userTime.get(Calendar.MONTH));
+        serverTime.set(Calendar.YEAR, userTime.get(Calendar.YEAR));
+
+        note.setWhen(serverTime.getTimeInMillis());
         repository.save(note);
 
         clearSessions();
